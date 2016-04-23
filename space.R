@@ -23,13 +23,14 @@ separateOnFilter <- function(k){
     return(list(k_c, k_r, k_v))
 }
 
-separateOnDateSub <- function(k){
+separateOnDateSub <- function(k, thold=0.3){
     res <- numeric()
     for(i in 2:dim(k)[1]){ res[i-1] <- k$Date[i]-k$Date[i-1]}
-    stamp <- which(res>1)
+    stamp <- which(res>thold)
     data_stamp <- list()
-    if (length(stamp)==0){ data_stamp[[1]] <- k } else if (length(stamp)==1)
-    { 
+    if (length(stamp)==0){ 
+        data_stamp[[1]] <- k 
+    } else if (length(stamp)==1){ 
         data_stamp[[1]] <- k[1:stamp,]
         data_stamp[[2]] <- k[(stamp+1):dim(k)[1],]
     } else if (length(stamp)==2){ 
