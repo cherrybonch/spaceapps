@@ -1,9 +1,10 @@
 setDirectory <- function(){
-    setwd("C:\\")
+    setwd("C:\\Projects\\Space")
 }
 
 readSpace <- function(){
     k <- read.csv("22_Kalliope.csv",colClasses = c("numeric","numeric","factor","numeric","factor","numeric","numeric","numeric"))
+    k$Date <- k$Date - min(k$Date)
     return (k)
 }
 
@@ -27,7 +28,7 @@ separateOnDateSub <- function(k){
     for(i in 2:dim(k)[1]){ res[i-1] <- k$Date[i]-k$Date[i-1]}
     stamp <- which(res>1)
     data_stamp <- list()
-    if (length(stamp)==0){ data_stamp[[1]] <- k_c } else if (length(stamp)==1)
+    if (length(stamp)==0){ data_stamp[[1]] <- k } else if (length(stamp)==1)
     { 
         data_stamp[[1]] <- k[1:stamp,]
         data_stamp[[2]] <- k[(stamp+1):dim(k)[1],]
