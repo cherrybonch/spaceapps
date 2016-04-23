@@ -20,7 +20,25 @@ separateOnFilter <- function(k){
     k_c <- k[k$Filter=="C",]
     k_r <- k[k$Filter=="R",]
     k_v <- k[k$Filter=="V",]
-    return(list(k_c, k_r, k_v))
+    if(nrow(k_c)==0){
+        if(nrow(k_r)==0){
+            return(list(v=k_v))
+        } else if(nrow(k_v)==0){
+            return(list(r=k_r))
+        } else {
+            return(list(r=k_r, v=k_v))
+        }
+    } else if(nrow(k_r)==0){
+        if(nrow(k_v)==0){
+            return(list(c=k_c))
+        } else {
+            return(list(c=k_c, v=k_v))
+        }
+    } else if(nrow(k_v)==0){
+        return(list(c=k_c, r=k_r))
+    } else {
+        return(list(c=k_c, r=k_r, v=k_v))
+    }
 }
 
 separateOnDateSub <- function(k, thold=0.3){

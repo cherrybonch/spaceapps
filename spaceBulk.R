@@ -2,13 +2,6 @@ setDirectory <- function(){
     setwd("C:\\Projects\\Space")
 }
 
-allPipeLine <- function(){
-    asteroids <- readSpaceBulkRDS()
-    asteroids_filter <- separateOnDateBulk(asteroids)
-    asteroids_filter_and_date <- separateOnDateBulk(asteroids_filter)
-    return(asteroids_filter_and_date) ##broken?
-}
-
 readSpaceBulkRDS <- function(){
     pathes <- list.files(path = "rds/", pattern = "rds$")
     k <- lapply(pathes, function(path){ 
@@ -30,10 +23,17 @@ readSpaceBulk <- function(){
 
 separateOnFilterBulk <- function(k){
     result <- lapply(k, function(k_inner){
-        k_c <- k_inner[k_inner$Filter=="C",]
         k_r <- k_inner[k_inner$Filter=="R",]
+        k_c <- k_inner[k_inner$Filter=="C",]
+        k_s <- k_inner[k_inner$Filter=="S",]
         k_v <- k_inner[k_inner$Filter=="V",]
-        return(list(k_c, k_r, k_v))
+        k_b <- k_inner[k_inner$Filter=="B",]
+        k_i <- k_inner[k_inner$Filter=="I",]
+        toexec <- paste0("list(",ifelse(nrow(k_r)!=0,"r=k_r",""),ifelse(nrow(k_c)!=0,",c=k_c",""),ifelse(nrow(k_s)!=0,",s=k_s",""),
+                         ifelse(nrow(k_v)!=0,",v=k_v",""),ifelse(nrow(k_b)!=0,",b=k_b",""),ifelse(nrow(k_i)!=0,",i=k_i",""),")")
+        toexec <- sub("\\(,","\\(",toexec)
+        temp <- eval(parse(text=toexec))
+        return(temp)
     })
     return(result)
 }
@@ -63,7 +63,7 @@ separateOnDateSub <- function(k){
 
 separateOnDate <- function(k_outer){
     if(class(k_outer)=="list") {
-        return (sapply(k_outer, separateOnDateSub))
+        return (lapply(k_outer, separateOnDateSub))
     } 
     else {
         return (separateOnDateSub(k))
@@ -75,9 +75,9 @@ separateOnDateBulk <- function(k_outer){
     return(result)
 }
 
-writeSpaceToRDS <- function(k){
+writeSpaceToRDS <- function(k,name){
     for(i in 1:length(k)){
-        saveRDS(k[[i]],paste0("rds/", i,".rds"))
+        saveRDS(k[[i]],paste0("rds/", name[i],".rds"))
     }
     return(1)
 }
