@@ -10,9 +10,15 @@ allPipeLine <- function(){
 
 extractPeriod <- function(k){
     result <- lapply(k, extractPeriodFilter)
+    return(result)
 }
 
-extractPeriodFilter <- function(k_filter){
+extractPeriodFilter <- function(k){
+    result <- lapply(k, extractPeriodFilterDate)
+    return(result)
+}
+
+extractPeriodFilterDate <- function(k_filter){
     k_filter <- lapply(k_filter, function(k_filter_date) {
         k_filter_date$Mag <- k_filter_date$Mag - min(k_filter_date$Mag)
         return(k_filter_date)
