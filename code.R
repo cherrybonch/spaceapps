@@ -82,5 +82,5 @@ colnames(asteroid_new) <- c("Period","Name","x","y")
 rownames(asteroid_new) <- asteroid_new$Name
 asteroid_new <- asteroid_new[-2]
 asteroid_new <- asteroid_new[!is.na(asteroid_new$y),]
-new <- asteroid_new[-c("2802_Weisel", "3773_Smithonian", "310_Margarita"),]
-asteroid_new$clust <- Do.Clustering(asteroid_new)
+new <- asteroid_new[!which(rownames(asteroid_new)!=c("2802_Weisel", "3773_Smithonian", "310_Margarita")),]
+asteroid_new$clust <- Do.Clustering(new,grid_x_dim = 5,grid_y_dim = 5)
